@@ -1,4 +1,3 @@
-
 export function encrypt(text) {
   return btoa(unescape(encodeURIComponent(text)));
 }
