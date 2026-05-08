@@ -1,4 +1,3 @@
-
 export async function encrypt(text) {
   const data = new TextEncoder().encode(text);
   const hash = await crypto.subtle.digest("SHA-256", data);
@@ -8,5 +7,5 @@ export async function encrypt(text) {
 }
 
 export function decrypt() {
-  return "SHA‑256 is one‑way and cannot be decrypted";
+  return "SHA-256 is one-way and cannot be decrypted";
 }
