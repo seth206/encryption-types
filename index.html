@@ -1,16 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Encryption Playground</title>
   <style>
     body {
-      margin: 0;
       background: white;
       color: black;
       font-family: Arial, sans-serif;
       min-height: 100vh;
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,76 +21,75 @@
       border-radius: 16px;
       padding: 20px;
     }
-    h1 { margin-top: 0; }
+    .row {
+      display: flex;
+      gap: 10px;
+    }
     select, textarea, input, button {
       width: 100%;
       margin-top: 10px;
       padding: 8px;
-      background: white;
-      color: black;
       border: 1px solid black;
       border-radius: 8px;
+      background: white;
+      color: black;
       box-sizing: border-box;
+      font-size: 14px;
     }
     button:hover {
       background: black;
       color: white;
       cursor: pointer;
     }
-    .row {
-      display: flex;
-      gap: 10px;
-    }
-    .hidden { display: none; }
   </style>
 </head>
 <body>
-<div class="app">
-  <h1>Encryption Playground</h1>
+  <div class="app">
+    <h1>Encryption Playground</h1>
 
-  <div class="row">
-    <select id="method" onchange="loadModule()">
-      <option value="base64">Base64</option>
-      <option value="caesar">Caesar</option>
-      <option value="xor">XOR</option>
-      <option value="sha256">SHA‑256</option>
-      <option value="aes">AES‑GCM</option>
-    </select>
+    <div class="row">
+      <select id="method" onchange="loadModule()">
+        <option value="base64">Base64</option>
+        <option value="caesar">Caesar</option>
+        <option value="xor">XOR</option>
+        <option value="sha256">SHA-256</option>
+        <option value="aes">AES-GCM</option>
+      </select>
 
-    <select id="mode">
-      <option value="encrypt">Encrypt</option>
-      <option value="decrypt">Decrypt</option>
-    </select>
+      <select id="mode">
+        <option value="encrypt">Encrypt</option>
+        <option value="decrypt">Decrypt</option>
+      </select>
+    </div>
+
+    <textarea id="input" rows="4" placeholder="Input"></textarea>
+    <input id="key" placeholder="Key / Shift (if required)">
+
+    <button onclick="runCrypto()">Run</button>
+
+    <textarea id="output" rows="4" placeholder="Output" readonly></textarea>
   </div>
 
-  <textarea id="input" rows="4" placeholder="Input"></textarea>
-  <input id="key" placeholder="Key / Shift (if required)" />
+  <script type="module">
+    let cryptoModule = null;
 
-  <button onclick="runCrypto()">Run</button>
+    window.loadModule = async () => {
+      const type = document.getElementById("method").value;
+      cryptoModule = await import(`./${type}.js`);
+    };
 
-  <textarea id="output" rows="4" placeholder="Output" readonly></textarea>
-</div>
+    window.runCrypto = async () => {
+      if (!cryptoModule) await loadModule();
 
-<script type="module">
-  let cryptoModule = null;
+      const mode = document.getElementById("mode").value;
+      const input = document.getElementById("input").value;
+      const key = document.getElementById("key").value;
 
-  window.loadModule = async function () {
-    const type = document.getElementById("method").value;
-    cryptoModule = await import(`./${type}.js`);
-  }
+      const result = await cryptoModule[mode](input, key);
+      document.getElementById("output").value = result;
+    };
 
-  window.runCrypto = async function () {
-    if (!cryptoModule) await loadModule();
-
-    const mode = document.getElementById("mode").value;
-    const input = document.getElementById("input").value;
-    const key = document.getElementById("key").value;
-
-    const result = await cryptoModuleinput, key;
-    document.getElementById("output").value = result;
-  }
-
-  loadModule();
-</script>
+    loadModule();
+  </script>
 </body>
 </html>
