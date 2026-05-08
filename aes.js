@@ -1,6 +1,7 @@
-
 export async function encrypt(text, key) {
-  const keyData = new TextEncoder().encode(key.padEnd(16, "0").slice(0, 16));
+  const keyData = new TextEncoder()
+    .encode(key.padEnd(16, "0").slice(0, 16));
+
   const cryptoKey = await crypto.subtle.importKey(
     "raw",
     keyData,
@@ -10,6 +11,7 @@ export async function encrypt(text, key) {
   );
 
   const iv = crypto.getRandomValues(new Uint8Array(12));
+
   const encrypted = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv },
     cryptoKey,
@@ -24,7 +26,10 @@ export async function encrypt(text, key) {
 
 export async function decrypt(payload, key) {
   const parsed = JSON.parse(payload);
-  const keyData = new TextEncoder().encode(key.padEnd(16, "0").slice(0, 16));
+
+  const keyData = new TextEncoder()
+    .encode(key.padEnd(16, "0").slice(0, 16));
+
   const cryptoKey = await crypto.subtle.importKey(
     "raw",
     keyData,
